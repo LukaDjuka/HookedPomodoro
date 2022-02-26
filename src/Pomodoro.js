@@ -7,10 +7,10 @@ import './Pomodoro.css';
 import './checkbox.css';
 
 function Pomodoro() {
-  const [mode, setMode] = useState(null);
-  const [nextMode, setNextMode] = useState("focus");
+  const [mode, setMode] = useState("focus");
   const [showSessionDetails, setShowSessionDetails] = useState(false);
-  const [currentSession, setCurrentSession] = useState({time: 10});
+  const [currentSession, setCurrentSession] = useState({time: 10}); /* ex: {focusLength: 20, breakLength: 5, complete: true} */
+  const [currentlySelectedButton, setCurrentlySelectedButton] = useState("25:00");
   const [sessions, setSessions] = useState([]);
 
   function getBackgroundColor(){
@@ -26,16 +26,11 @@ function Pomodoro() {
   }
 
   function timerFinished(){
-    setMode(null);
-  }
-
-  function startTimer(){
-    setMode(nextMode);
-    if (nextMode == "focus"){
-      setNextMode("break");
+    if (mode == "focus"){
+      setMode("break");
     }
     else{
-      setNextMode("focus");
+      setMode("focus");
     }
   }
 
@@ -44,8 +39,9 @@ function Pomodoro() {
   }
 
   function setNewCurrentTime(time){
-    setCurrentSession(time)
+    setCurrentSession({"time": time})
   }
+
 
 // Continue from using this link: https://css-tricks.com/how-to-create-an-animated-countdown-timer-with-html-css-and-javascript/ to create the timer and setup the buttons at the bottom of the page
 // Use the above link to try to get the styling of the countdown to be correct. Otherwise look into this to actually create the timer logic: https://www.digitalocean.com/community/tutorials/react-countdown-timer-react-hooks
@@ -78,12 +74,12 @@ function Pomodoro() {
         </div>
       </header>
       <div id="timerHolder">
-        <Timer time={currentSession.time} mode={mode} startTimer={startTimer} timerFinished={timerFinished}></Timer>
+        <Timer time={currentSession.time} timerFinished={timerFinished}></Timer>
       </div>
       <div id="buttonsHolder">
-        <ConfigButton text="25:00" callBack={() => {setNewCurrentTime(25*60)}}></ConfigButton>
-        <ConfigButton text="15:00" callBack={() => {setNewCurrentTime(15*60)}}></ConfigButton>
-        <ConfigButton text="10:00" callBack={() => {setNewCurrentTime(10*60)}}></ConfigButton>
+        <ConfigButton text="25:00" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(25*60); setCurrentlySelectedButton("25:00")}}></ConfigButton>
+        <ConfigButton text="15:00" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(15*60); setCurrentlySelectedButton("15:00")}}></ConfigButton>
+        <ConfigButton text="10:00" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(10*60); setCurrentlySelectedButton("10:00")}}></ConfigButton>
       </div>
     </div>
   );

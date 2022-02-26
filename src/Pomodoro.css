@@ -193,7 +193,7 @@ html {
   cursor: pointer;
 }
 
-.commonButton.beingPressed{
+.commonButton.selected{
   box-shadow: none !important;
 }
 

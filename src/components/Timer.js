@@ -1,28 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react'
 import ConfigButton from './ConfigButton';
 
-function Timer({time, mode, startTimer, timerFinished}){
+function Timer({time, timerFinished}){
     const [timeLeft, setTimeLeft] = useState(time);
     const [counting, setCounting] = useState(false);
-    const [buttonPress, setButtonPress] = useState(false);
     const intervalRef = useRef();
 
     useEffect(() => {
-        if (!mode){
+        if (counting){
             intervalRef.current = setInterval(() => {
                 setTimeLeft((t) => t - 1)
             }, 1000);
             
             return () => clearInterval(intervalRef.current);
         }
-    }, []);
+        else{
+            setTimeLeft(time);
+        }
+    }, [counting, timeLeft]);
 
     useEffect(() => {
         if (timeLeft && timeLeft <= 0){
             clearInterval(intervalRef.current);
+            setCounting(false);
             timerFinished();
         }
-    }, [timeLeft])
+    }, [timeLeft]);
+
+    function startTimer(){
+        setCounting(true);
+    }
 
     function formatTimeString(time){
         const minutes = Math.floor(time / 60);
@@ -51,7 +58,7 @@ function Timer({time, mode, startTimer, timerFinished}){
     };
 
     let remainingPathColor = "timer-path-remaining " + COLOR_CODES.info.color;
-    let display = mode ? formatTimeString(timeLeft) : <ConfigButton text={"Start"} callBack={startTimer}></ConfigButton>;
+    let display = counting ? formatTimeString(timeLeft) : <ConfigButton text={"Start"} callBack={startTimer}></ConfigButton>;
     
     return (
         <div id="timer">

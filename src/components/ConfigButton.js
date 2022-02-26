@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function ConfigButton({text, callBack}){
+function ConfigButton({text, callBack, currentlySelected}){
     const [beingPressed, setBeingPressed] = useState(false);
 
     function pressButton(e){
@@ -10,9 +10,11 @@ function ConfigButton({text, callBack}){
     function liftButton(e){
         setBeingPressed(false);
     }
-    
+
+    //onMouseDown={pressButton} onMouseUp={liftButton}
+
     return (
-        <button className={beingPressed ? "beingPressed commonButton" : "commonButton"} onClick={callBack} onMouseDown={pressButton} onMouseUp={liftButton}>
+        <button className={currentlySelected === text ? "selected commonButton" : "commonButton"} onClick={callBack}>
             {text}
         </button>
     );
