@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import ConfigButton from './ConfigButton';
 
-function Timer({time, timerFinished}){
+function Timer({time, timerStarted, timerFinished}){
     const [timeLeft, setTimeLeft] = useState(time);
     const [counting, setCounting] = useState(false);
     const intervalRef = useRef();
@@ -17,7 +17,7 @@ function Timer({time, timerFinished}){
         else{
             setTimeLeft(time);
         }
-    }, [counting, timeLeft]);
+    }, [counting, timeLeft, time]);
 
     useEffect(() => {
         if (timeLeft && timeLeft <= 0){
@@ -29,6 +29,7 @@ function Timer({time, timerFinished}){
 
     function startTimer(){
         setCounting(true);
+        timerStarted();
     }
 
     function formatTimeString(time){

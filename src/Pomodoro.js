@@ -9,7 +9,8 @@ import './checkbox.css';
 function Pomodoro() {
   const [mode, setMode] = useState("focus");
   const [showSessionDetails, setShowSessionDetails] = useState(false);
-  const [currentSession, setCurrentSession] = useState({time: 10}); /* ex: {focusLength: 20, breakLength: 5, complete: true} */
+  const [isCounting, setIsCounting] = useState(false);
+  const [currentSession, setCurrentSession] = useState({time: 1500}); /* ex: {focusLength: 20, breakLength: 5, complete: true} */
   const [currentlySelectedButton, setCurrentlySelectedButton] = useState("25:00");
   const [sessions, setSessions] = useState([]);
 
@@ -32,6 +33,7 @@ function Pomodoro() {
     else{
       setMode("focus");
     }
+    setIsCounting(false);
   }
 
   function toggleSessionDetails(){
@@ -40,6 +42,10 @@ function Pomodoro() {
 
   function setNewCurrentTime(time){
     setCurrentSession({"time": time})
+  }
+
+  function startCounting(){
+    setIsCounting(true);
   }
 
 
@@ -59,7 +65,33 @@ function Pomodoro() {
 // Try to make the circle bigger
 // Tinker with the coloring of the page
 // Record the sessions in the detailsHOlder
+
+// Continue with simply stepping through each component and make sure they work before continuing with more additons
+
   const backgroundColor = getBackgroundColor();
+
+  const buttonsHolder = (
+    <div id="buttonsHolder">
+        <ConfigButton text="25:00" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(25*60); setCurrentlySelectedButton("25:00")}}></ConfigButton>
+        <ConfigButton text="15:00" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(15*60); setCurrentlySelectedButton("15:00")}}></ConfigButton>
+        <ConfigButton text="10:00" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(10*60); setCurrentlySelectedButton("10:00")}}></ConfigButton>
+        <div id="customButtonHolder">
+          <input type="text" id="inputSelection"></input>
+          <ConfigButton text="Custom" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(10*60); setCurrentlySelectedButton("10:00")}}></ConfigButton>
+        </div>
+    </div>
+  );
+
+
+  // This is where I found the pulsing ideas:
+  //Get rid of buttons and add a pulsing effect? 
+// like: https://css-tricks.com/recreating-apple-watch-breathe-app-animation/
+// or 
+// https://www.florin-pop.com/blog/2019/03/css-pulse-effect/
+
+  const pulseSkipHolder = ( // This is gonna hold pulsating dots to simulate meditative breathing practices as well as two buttons. one for pausing and the other for Skipping the session. 
+    <div id="boom"></div>
+  );
   
   return (
     <div id="Pomodoro" className={backgroundColor}>
@@ -74,13 +106,9 @@ function Pomodoro() {
         </div>
       </header>
       <div id="timerHolder">
-        <Timer time={currentSession.time} timerFinished={timerFinished}></Timer>
+        <Timer time={currentSession.time} timerStarted={startCounting} timerFinished={timerFinished}></Timer>
       </div>
-      <div id="buttonsHolder">
-        <ConfigButton text="25:00" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(25*60); setCurrentlySelectedButton("25:00")}}></ConfigButton>
-        <ConfigButton text="15:00" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(15*60); setCurrentlySelectedButton("15:00")}}></ConfigButton>
-        <ConfigButton text="10:00" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(10*60); setCurrentlySelectedButton("10:00")}}></ConfigButton>
-      </div>
+      {!isCounting ? buttonsHolder : pulseSkipHolder}
     </div>
   );
 }
