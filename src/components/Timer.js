@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import ConfigButton from './ConfigButton';
 
-function Timer({time, timerStarted, timerFinished}){
+function Timer({time, timerStarted, timerFinished, timerSkipped}){
     const [timeLeft, setTimeLeft] = useState(time);
     const [counting, setCounting] = useState(false);
     const intervalRef = useRef();
@@ -21,11 +21,23 @@ function Timer({time, timerStarted, timerFinished}){
 
     useEffect(() => {
         if (timeLeft && timeLeft <= 0){
-            clearInterval(intervalRef.current);
-            setCounting(false);
-            timerFinished();
+            // clearInterval(intervalRef.current);
+            // setCounting(false);
+            // timerFinished();
+            endTimer();
         }
     }, [timeLeft]);
+
+    function endTimer(didSkip){
+        clearInterval(intervalRef.current);
+        setCounting(false);
+        if (didSkip){
+            timerSkipped();
+        }
+        else{
+            timerFinished();
+        }
+    }
 
     function startTimer(){
         setCounting(true);
@@ -79,6 +91,10 @@ function Timer({time, timerStarted, timerFinished}){
             <span className="timer-label">
                 {display}
             </span>
+            <div id="pauseAndSkipHolder">
+                <ConfigButton text="Pause"></ConfigButton>
+                <ConfigButton text="Skip" callBack={()=>{endTimer(true)}}></ConfigButton>
+            </div>
         </div>
     )
 }

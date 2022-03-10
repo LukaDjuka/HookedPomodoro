@@ -3,10 +3,7 @@ import Session from './Session';
 
 function Tracker({sessions}){
 
-    let sessionList = sessions.map(session => <Session stats={session}></Session>);
-    let list = [{focusLength: 20, breakLength: 5, complete: true}, {focusLength: 20, breakLength: 5, complete: true}, {focusLength: 20, breakLength: 5, complete: true},{focusLength: 20, breakLength: 5, complete: true}];
-    let thing = list.map(session => <Session stats={session}></Session>);
-    // thing = <Session stats={{focusLength: 20, breakLength: 5, complete: true}}></Session>
+    let sessionList = sessions.map(session => <Session focusLength={session.focus} breakLength={session.break} didComplete={session.didComplete}></Session>);
 
     return (
         <div id="trackerBox">
@@ -19,8 +16,7 @@ function Tracker({sessions}){
                 </div>
             </div>
             <div id="trackerStats">
-                {thing}
-                {/* {this.props.sessions.map(session => <Session stats={session}></Session>)} */}
+                {sessionList.length ? sessionList : <p id="noSessionHistoryText">No Session History Yet</p>}
             </div>
         </div>
     );

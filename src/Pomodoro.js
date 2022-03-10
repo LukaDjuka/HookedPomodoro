@@ -12,6 +12,7 @@ function Pomodoro() {
   const [isCounting, setIsCounting] = useState(false);
   const [currentSession, setCurrentSession] = useState({time: 1500}); /* ex: {focusLength: 20, breakLength: 5, complete: true} */
   const [currentlySelectedButton, setCurrentlySelectedButton] = useState("25:00");
+  const [customTime, setCustomTime] = useState(null);
   const [sessions, setSessions] = useState([]);
 
   function getBackgroundColor(){
@@ -26,14 +27,24 @@ function Pomodoro() {
     }
   }
 
-  function timerFinished(){
+  function timerFinished(didSkip){
+    debugger
     if (mode == "focus"){
+      let newSession = {"focus" : currentSession.time, "didComplete": (didSkip ? false: true)};
+      setSessions([...sessions, newSession]);
       setMode("break");
     }
     else{
+      let mostRecentSessionToUpdate = sessions[sessions.length - 1];
+      mostRecentSessionToUpdate.break = currentSession.time
+      setSessions(sessions);
       setMode("focus");
     }
     setIsCounting(false);
+  }
+
+  function timerSkipped(){
+    timerFinished(true);
   }
 
   function toggleSessionDetails(){
@@ -41,23 +52,35 @@ function Pomodoro() {
   }
 
   function setNewCurrentTime(time){
-    setCurrentSession({"time": time})
+    if (Number(time)){
+      setCurrentSession({"time": time})
+    }
   }
 
   function startCounting(){
     setIsCounting(true);
   }
 
+  function trackCustomTime(e){
+    let customTimeInSeconds = 0;
+    if (e.target.value.match(/^(\d+:)?(\d+:)?(\d+)$/g) != null){
+      let timeHolder = e.target.value.split(":");
+      let i = timeHolder.length - 1;
+      let multiplier = 1;
+      while (i >= 0){
+        let number = Number(timeHolder[i])
+        let secondConversion = (number * multiplier);
+        customTimeInSeconds += secondConversion;
+        multiplier = multiplier * 60;
+        i--;
+      }
+    }
+    if (customTimeInSeconds > 0){
+      setCustomTime(customTimeInSeconds);
+    }
+  }
 
-// Continue from using this link: https://css-tricks.com/how-to-create-an-animated-countdown-timer-with-html-css-and-javascript/ to create the timer and setup the buttons at the bottom of the page
-// Use the above link to try to get the styling of the countdown to be correct. Otherwise look into this to actually create the timer logic: https://www.digitalocean.com/community/tutorials/react-countdown-timer-react-hooks
-// Although I think my setInterval approach should work I just need to iron out the kinks
-// For some reason the timeLeft variable never decreases eventhough I'm using a statehook to decrease it. Perhaps it's some sort of local memory to when the interval started??
-  
-// NEXT STEPS END OF FEB 22 - style the button. Make it work properly. As of right now I keep track of current mode and the next upcoming mode.
-// This is because when the use presses Start within the Timer it has to know which mode to change it to within the callback inside Pomodor.js. Therefore it needs to know which node needs to be next.
-// Becacuse the time doesnt need to keep track of the mode. In fact I could maybe switch it to just use the "counting" state variable which I created inside the component.
-// Then can implement buttons and make sure they they each set the correct session variable info.
+
 
 // Next thing to do is to make a custom time parameter that the use can provide and select.
 // Make the selected time stay Pressed down as well as a slightly different color
@@ -76,8 +99,8 @@ function Pomodoro() {
         <ConfigButton text="15:00" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(15*60); setCurrentlySelectedButton("15:00")}}></ConfigButton>
         <ConfigButton text="10:00" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(10*60); setCurrentlySelectedButton("10:00")}}></ConfigButton>
         <div id="customButtonHolder">
-          <input type="text" id="inputSelection"></input>
-          <ConfigButton text="Custom" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(10*60); setCurrentlySelectedButton("10:00")}}></ConfigButton>
+          <input type="text" name="duration" id="inputSelection" placeholder="hh:mm:ss" pattern="^((\d+:)?\d+:)?\d*$" title="Custom time setting in the format of Hours, colon, minutes, colon, seconds " onChange={trackCustomTime}></input>
+          <ConfigButton text="Custom" currentlySelected={currentlySelectedButton} callBack={() => {setNewCurrentTime(customTime); setCurrentlySelectedButton("Custom")}}></ConfigButton>
         </div>
     </div>
   );
@@ -88,6 +111,8 @@ function Pomodoro() {
 // like: https://css-tricks.com/recreating-apple-watch-breathe-app-animation/
 // or 
 // https://www.florin-pop.com/blog/2019/03/css-pulse-effect/
+
+// Last thing I did was set up the custom time to work as intended! I only tested iwth basic inputs - needs more work in general
 
   const pulseSkipHolder = ( // This is gonna hold pulsating dots to simulate meditative breathing practices as well as two buttons. one for pausing and the other for Skipping the session. 
     <div id="boom"></div>
@@ -106,7 +131,7 @@ function Pomodoro() {
         </div>
       </header>
       <div id="timerHolder">
-        <Timer time={currentSession.time} timerStarted={startCounting} timerFinished={timerFinished}></Timer>
+        <Timer time={currentSession.time} timerStarted={startCounting} timerFinished={timerFinished} timerSkipped={timerSkipped}></Timer>
       </div>
       {!isCounting ? buttonsHolder : pulseSkipHolder}
     </div>

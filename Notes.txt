@@ -1,0 +1,12 @@
+1) March 07, 2022 - Need to make the tracking for sessions work properly
+    - Made the tracker keep track of each sesison but I need to alter the text inside the box to say "you have no sessions" to start and then make sure the wording is correct. Currently it uses hardcoded "minutes" values
+
+2) March 08, 2022
+    - Added no session history text - DONE
+    - Need to make session history use the correct wording for hours, minutes and seconds - DONE
+    - Need to make a skip and pause button on the timer, and then work to modify the session tracker to ensure it accomodates for skipped sessions. Including the checked attribute in the sessions holder.
+        - ** END OF THE DAY ** Need to make it so if they skip it sends a special type of "timer finished" message to the Pomodoro which forces it to show up as skipped in session info. Also need to figure out how to make the pause button work.
+        - After I finish the step above I'll be 90% done.
+    - Then I think only styling and aesthetic choices are left
+        - Maybe pulsing thing aswell
+    - 
