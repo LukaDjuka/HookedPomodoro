@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/HookedPomodoro/static/css/main.6f82eae4.css",
+    "main.js": "/HookedPomodoro/static/js/main.1956e219.js",
+    "static/js/787.a4652825.chunk.js": "/HookedPomodoro/static/js/787.a4652825.chunk.js",
+    "index.html": "/HookedPomodoro/index.html",
+    "main.6f82eae4.css.map": "/HookedPomodoro/static/css/main.6f82eae4.css.map",
+    "main.1956e219.js.map": "/HookedPomodoro/static/js/main.1956e219.js.map",
+    "787.a4652825.chunk.js.map": "/HookedPomodoro/static/js/787.a4652825.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6f82eae4.css",
+    "static/js/main.1956e219.js"
+  ]
+}
