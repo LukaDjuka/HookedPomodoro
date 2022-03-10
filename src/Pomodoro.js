@@ -28,7 +28,6 @@ function Pomodoro() {
   }
 
   function timerFinished(didSkip){
-    debugger
     if (mode == "focus"){
       let newSession = {"focus" : currentSession.time, "didComplete": (didSkip ? false: true)};
       setSessions([...sessions, newSession]);

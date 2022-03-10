@@ -92,7 +92,7 @@ function Timer({time, timerStarted, timerFinished, timerSkipped}){
                 {display}
             </span>
             <div id="pauseAndSkipHolder">
-                <ConfigButton text="Pause"></ConfigButton>
+                {/* <ConfigButton text="Pause" callBack={()=> {setCounting(!counting)}}></ConfigButton> */}
                 <ConfigButton text="Skip" callBack={()=>{endTimer(true)}}></ConfigButton>
             </div>
         </div>
