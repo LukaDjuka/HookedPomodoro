@@ -4,6 +4,8 @@ import ConfigButton from './ConfigButton';
 function Timer({time, timerStarted, timerFinished, timerSkipped}){
     const [timeLeft, setTimeLeft] = useState(time);
     const [counting, setCounting] = useState(false);
+    const [justPaused, setJustPaused] = useState(false);
+    const [started, setStarted] = useState(false);
     const intervalRef = useRef();
 
     useEffect(() => {
@@ -15,7 +17,13 @@ function Timer({time, timerStarted, timerFinished, timerSkipped}){
             return () => clearInterval(intervalRef.current);
         }
         else{
-            setTimeLeft(time);
+            if (justPaused){
+                setTimeLeft(timeLeft);
+                setJustPaused(false);
+            }
+            else{
+                setTimeLeft(time);
+            }
         }
     }, [counting, timeLeft, time]);
 
@@ -31,6 +39,7 @@ function Timer({time, timerStarted, timerFinished, timerSkipped}){
     function endTimer(didSkip){
         clearInterval(intervalRef.current);
         setCounting(false);
+        setStarted(false);
         if (didSkip){
             timerSkipped();
         }
@@ -41,7 +50,13 @@ function Timer({time, timerStarted, timerFinished, timerSkipped}){
 
     function startTimer(){
         setCounting(true);
+        setStarted(true);
         timerStarted();
+    }
+
+    function pauseTimer(){
+        setCounting(!counting);
+        setJustPaused(true);
     }
 
     function formatTimeString(time){
@@ -71,7 +86,7 @@ function Timer({time, timerStarted, timerFinished, timerSkipped}){
     };
 
     let remainingPathColor = "timer-path-remaining " + COLOR_CODES.info.color;
-    let display = counting ? formatTimeString(timeLeft) : <ConfigButton text={"Start"} callBack={startTimer}></ConfigButton>;
+    let display = started ? formatTimeString(timeLeft) : <ConfigButton text={"Start"} callBack={startTimer}></ConfigButton>;
     
     return (
         <div id="timer">
@@ -92,7 +107,7 @@ function Timer({time, timerStarted, timerFinished, timerSkipped}){
                 {display}
             </span>
             <div id="pauseAndSkipHolder">
-                {/* <ConfigButton text="Pause" callBack={()=> {setCounting(!counting)}}></ConfigButton> */}
+                {started ? (counting ? <ConfigButton text="Pause" callBack={pauseTimer}></ConfigButton> : <ConfigButton text="Resume" callBack={pauseTimer}></ConfigButton>) : null}
                 <ConfigButton text="Skip" callBack={()=>{endTimer(true)}}></ConfigButton>
             </div>
         </div>
