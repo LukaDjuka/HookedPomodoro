@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 
-function HeaderText(props){
+function HeaderText({mode, lulu}){
     
     return (
         <div id="titleTextHolder">
             <h1 id="titleText">
-                {props.mode === "break" ? "Break" : "Focus"}
+                {lulu ? "❤❤❤ " : ""}
+                {mode === "break" ? "Break" : "Focus"}
+                {lulu ? " ❤❤❤" : ""}
             </h1>
         </div>
     );

@@ -14,6 +14,7 @@ function Pomodoro() {
   const [currentlySelectedButton, setCurrentlySelectedButton] = useState("25:00");
   const [customTime, setCustomTime] = useState(null);
   const [sessions, setSessions] = useState([]);
+  const [lulu, setLulu] = useState(false);
 
   function getBackgroundColor(){
     if (mode === null){
@@ -74,6 +75,9 @@ function Pomodoro() {
         i--;
       }
     }
+    else if (e.target.value.match(/lulu/gi)){
+      setLulu(true);
+    }
     if (customTimeInSeconds > 0){
       setCustomTime(customTimeInSeconds);
     }
@@ -120,7 +124,7 @@ function Pomodoro() {
   return (
     <div id="Pomodoro" className={backgroundColor}>
       <header className="Pomodoro-header">
-        <HeaderText mode={mode}></HeaderText>
+        <HeaderText mode={mode} lulu={lulu}></HeaderText>
         
         <div id="sessionDetailsHolder">
           <div id="hamburgerHolder">
